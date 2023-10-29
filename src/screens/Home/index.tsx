@@ -1,4 +1,4 @@
-import { Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, TextInput, View, TouchableOpacity, ScrollView, FlatList, Alert } from "react-native";
 import { styles } from "./styles";
 
 import Parcicipant from "../../components/participant";
@@ -6,7 +6,7 @@ import Parcicipant from "../../components/participant";
  export default function Home() {
   
   const participant = [
-    "Fernando lemos",
+    "Fernando Lemos",
     "João da silva",
     "Maria das graças",
     "Rafael marques",
@@ -20,9 +20,23 @@ import Parcicipant from "../../components/participant";
   ]
 
   function handleParticipantAdd() {
-    console.log("Participante adicionado")
+    if(participant.includes("Fernando Lemos")) {
+      return Alert.alert("Participante já registrado!", "Encontram um participante com o mesmo nome na nossa base.")
+    }
+     console.log("Participante adicionado")
   }
   function handleParticipantRemove(name : string){
+    Alert.alert("Remover", `Remover o participante ${name}?`, [
+      {
+        text: 'Sim',
+        onPress: () => Alert.alert("Deletado!")
+
+      },
+      {
+        text: 'Nao',
+        style: 'cancel'
+      }
+    ])
     console.log(`Participante ${name}, removido!`)
   }
 
@@ -49,16 +63,32 @@ import Parcicipant from "../../components/participant";
       </Text>
         </TouchableOpacity>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {
-            participant.map(participant => (
-              <Parcicipant
-                key={participant} 
-                name={participant}
-                onRemove = {() => handleParticipantRemove(participant)}/>
-            ))
-          }
-        </ScrollView>
+
+        <FlatList
+          data={participant}
+          keyExtractor={item => item}
+          renderItem={({item})=> (
+            <Parcicipant
+                key={item} 
+                name={item}
+                onRemove = {() => handleParticipantRemove(item)}/>
+          )}
+        />
+
+        {/* 1 metodo para se percorrer uma lista de participante usando map e scrollView */}
+        {/* // <ScrollView showsVerticalScrollIndicator={false}> */}
+        {/* //   {
+        //     participant.map(participant => (
+        //       <Parcicipant
+        //         key={participant} 
+        //         name={participant}
+        //         onRemove = {() => handleParticipantRemove(participant)}/>
+        //     ))<Parcicipant
+        //         key={participant} 
+        //         name={participant}
+        //         onRemove = {() => handleParticipantRemove(participant)}/>
+        //   }
+        // </ScrollView> */}
     </View>
   )
  }
