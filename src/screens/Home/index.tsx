@@ -2,42 +2,34 @@ import { Text, TextInput, View, TouchableOpacity, ScrollView, FlatList, Alert } 
 import { styles } from "./styles";
 
 import Parcicipant from "../../components/participant";
+import { useState } from "react";
 
  export default function Home() {
-  
-  const participant = [
-    "Fernando Lemos",
-    "João da silva",
-    "Maria das graças",
-    "Rafael marques",
-    "José de souza",
-    "Luiza pereira",
-    "Ana paula",
-    "Bruno rodrigues",
-    "Cleiton alves",
-    "Davi ferreira",
-    "Eduardo mendes"
-  ]
+
+  const [participants, setParticipants] = useState<string[]>([])
+  const [participantName, setParticipantName] = useState('')
 
   function handleParticipantAdd() {
-    if(participant.includes("Fernando Lemos")) {
+    if(participants.includes(participantName)) {
       return Alert.alert("Participante já registrado!", "Encontram um participante com o mesmo nome na nossa base.")
     }
-     console.log("Participante adicionado")
+
+    setParticipants(prevStates => [...prevStates, participantName])
+    setParticipantName('')
+
+     console.log(`Participante adicionado ${participantName}`)
   }
   function handleParticipantRemove(name : string){
     Alert.alert("Remover", `Remover o participante ${name}?`, [
       {
         text: 'Sim',
         onPress: () => Alert.alert("Deletado!")
-
       },
       {
         text: 'Nao',
         style: 'cancel'
       }
     ])
-    console.log(`Participante ${name}, removido!`)
   }
 
   return(
@@ -55,6 +47,8 @@ import Parcicipant from "../../components/participant";
         style = {styles.input}
         placeholder="Nome do participante"
         placeholderTextColor="#B5B5B6"
+        onChangeText={setParticipantName}
+        value={participantName}
         />
 
         <TouchableOpacity style = {styles.button} onPress={handleParticipantAdd}>
@@ -65,7 +59,7 @@ import Parcicipant from "../../components/participant";
         </View>
 
         <FlatList
-          data={participant}
+          data={participants}
           keyExtractor={item => item}
           renderItem={({item})=> (
             <Parcicipant
@@ -78,15 +72,15 @@ import Parcicipant from "../../components/participant";
         {/* 1 metodo para se percorrer uma lista de participante usando map e scrollView */}
         {/* // <ScrollView showsVerticalScrollIndicator={false}> */}
         {/* //   {
-        //     participant.map(participant => (
+        //     participants.map(participants => (
         //       <Parcicipant
-        //         key={participant} 
-        //         name={participant}
-        //         onRemove = {() => handleParticipantRemove(participant)}/>
+        //         key={participants} 
+        //         name={participants}
+        //         onRemove = {() => handleParticipantRemove(participants)}/>
         //     ))<Parcicipant
-        //         key={participant} 
-        //         name={participant}
-        //         onRemove = {() => handleParticipantRemove(participant)}/>
+        //         key={participants} 
+        //         name={participants}
+        //         onRemove = {() => handleParticipantRemove(participants)}/>
         //   }
         // </ScrollView> */}
     </View>
