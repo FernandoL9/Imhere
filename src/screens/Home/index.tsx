@@ -4,12 +4,19 @@ import { styles } from "./styles";
 import Parcicipant from "../../components/participant";
 import { useState } from "react";
 
+type props = {
+  event : string;
+}
  export default function Home() {
 
   const [participants, setParticipants] = useState<string[]>([])
   const [participantName, setParticipantName] = useState('')
 
   function handleParticipantAdd() {
+
+    if(participantName === "") {
+      return Alert.alert("Error", "Insira um nome")
+    }
     if(participants.includes(participantName)) {
       return Alert.alert("Participante já registrado!", "Encontram um participante com o mesmo nome na nossa base.")
     }
@@ -34,9 +41,9 @@ import { useState } from "react";
 
   return(
     <View style= {styles.container}>
-      <Text style= {styles.eventName}>
-        Nome do evento
-      </Text>
+        <Text style= {styles.eventName}>
+          Nome do evento
+        </Text>
 
       <Text style= {styles.eventDate}>
         Domingo, 23 de outubro de 2023
@@ -65,24 +72,18 @@ import { useState } from "react";
             <Parcicipant
                 key={item} 
                 name={item}
-                onRemove = {() => handleParticipantRemove(item)}/>
-          )}
+                onRemove = {() => handleParticipantRemove(item)}
+            />
+          )}          
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent = {( () => (
+            <Text style={styles.listEmptyComponent}>
+              Ninguém chegou ao evento ainda? Adicione os participantes a sua lista de presença 
+            </Text>
+          )
+            
+            )}
         />
-
-        {/* 1 metodo para se percorrer uma lista de participante usando map e scrollView */}
-        {/* // <ScrollView showsVerticalScrollIndicator={false}> */}
-        {/* //   {
-        //     participants.map(participants => (
-        //       <Parcicipant
-        //         key={participants} 
-        //         name={participants}
-        //         onRemove = {() => handleParticipantRemove(participants)}/>
-        //     ))<Parcicipant
-        //         key={participants} 
-        //         name={participants}
-        //         onRemove = {() => handleParticipantRemove(participants)}/>
-        //   }
-        // </ScrollView> */}
     </View>
   )
  }
